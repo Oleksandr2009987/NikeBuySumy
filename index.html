@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Слайдер Кросівок</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="photo-selection">
+            <img src="photo1.png" alt="Кросівок 1" onclick="selectSlide(0)" class="thumbnail selected" id="thumb1">
+            <img src="photo2.png" alt="Кросівок 2" onclick="selectSlide(1)" class="thumbnail" id="thumb2">
+            <img src="photo3.png" alt="Кросівок 3" onclick="selectSlide(2)" class="thumbnail" id="thumb3">
+        </div>
+
+        <div class="slider">
+            <div class="slide active">
+                <img src="photo1.png" alt="Слайд 1" class="slide-image">
+                <div class="info">
+                    <h3>Nike Dunk</h3>
+                    <div class="price">$199</div>
+                    <a href="https://t.me/Tailer32" class="purchase-btn">Оформити</a>
+                </div>
+            </div>
+            <div class="slide">
+                <img src="photo2.png" alt="Слайд 2" class="slide-image">
+                <div class="info">
+                    <h3>Nike Jordan</h3>
+                    <div class="price">$299</div>
+                    <a href="https://t.me/Tailer32" class="purchase-btn">Оформити</a>
+                </div>
+            </div>
+            <div class="slide">
+                <img src="photo3.png" alt="Слайд 3" class="slide-image">
+                <div class="info">
+                    <h3>Nike Jordan 1</h3>
+                    <div class="price">$159</div>
+                    <a href="https://t.me/Tailer32" class="purchase-btn">Оформити</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; Официальний сайт NikeBuySumy
+    </footer>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const thumbnails = document.querySelectorAll('.thumbnail');
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            slides[currentSlide].classList.remove('active');
+            thumbnails[currentSlide].classList.remove('selected');
+            currentSlide = (index + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            thumbnails[currentSlide].classList.add('selected');
+        }
+
+        function selectSlide(index) {
+            showSlide(index);
+        }
+    </script>
+</body>
+</html>
