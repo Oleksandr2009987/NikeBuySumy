@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NikeBuySumy</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Основные стили */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+            overflow-x: hidden;
+            transition: background 0.5s ease; /* Плавний перехід фону */
+        }
+
+        .container {
+            opacity: 0; /* Скрыть весь контент */
+            transition: opacity 1s ease-in-out 0.5s, transform 0.5s ease-in-out; /* Плавное появление и движение с эффектом */
+            transform: translateY(30px); /* Поднять контейнер вниз */
+            width: 100%;
+            max-width: 800px; /* Максимальная ширина контейнера */
+        }
+
+        .photo-selection {
+            margin: 20px 0;
+            opacity: 0; /* Скрыть меню выбора фотографий */
+            transform: translateY(-20px); /* Поднять меню вверх */
+            transition: opacity 1s ease-in-out 1s, transform 1s ease-in-out 1s; /* Плавное появление и движение */
+        }
+
+        .thumbnail {
+            cursor: pointer;
+            margin: 0 5px;
+            transition: transform 0.2s, box-shadow 0.3s; /* Плавний перехід тіні */
+        }
+
+        .thumbnail:hover {
+            transform: scale(1.1); /* Увеличение миниатюры при наведении */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Тінь при наведенні */
+        }
+
+        .slider {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Максимальная ширина слайдера */
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none; /* Скрыть все слайды */
+            transition: transform 0.5s ease-in-out; /* Плавний перехід для слайдів */
+        }
+
+        .slide.active {
+            display: block; /* Показать активный слайд */
+            animation: fadeIn 0.5s ease; /* Анімація появи */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-image {
+            width: 100%; /* Адаптивная ширина изображения */
+            border-radius: 10px; /* Закругление углов */
+            opacity: 0; /* Скрыть изображение */
+            transform: translateY(20px); /* Поднять изображение вверх */
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out; /* Плавное появление и движение */
+        }
+
+        .slide.active .slide-image {
+            opacity: 1; /* Показать изображение */
+            transform: translateY(0); /* Вернуть изображение на место */
+        }
+
+        .info {
+            text-align: center;
+            margin-top: 10px;
+            transition: transform 0.5s ease; /* Плавний перехід для інформації */
+        }
+
+        .info h3 {
+            font-size: 2em; /* Больший размер для названия */
+            margin: 0; /* Удалить отступы */
+        }
+
+        .price {
+            font-size: 1.5em; /* Больший размер для цены */
+            color: #d9534f; /* Цвет для цены */
+            margin: 5px 0; /* Отступ сверху и снизу */
+        }
+
+        .purchase-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #28a745; /* Цвет кнопки */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s, transform 0.3s; /* Плавний перехід для кнопки */
+        }
+
+        .purchase-btn:hover {
+            background-color: #218838; /* Темный цвет кнопки при наведении */
+            transform: scale(1.05); /* Легке збільшення кнопки */
+        }
+
+        footer {
+            opacity: 0; /* Скрыть футер */
+            transform: translateY(20px); /* Поднять футер вверх */
+            transition: opacity 1s ease-in-out 2s, transform 1s ease-in-out 2s; /* Плавное появление и движение с задержкой */
+            background: linear-gradient(135deg, #4a4a4a, #d9d9d9);
+            color: #333;
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+        }
+
+        footer.show {
+            opacity: 1; /* Показать футер */
+            transform: translateY(0); /* Вернуть футер на место */
+        }
+
+        .show {
+            opacity: 1; /* Показать контейнер */
+            transform: translateY(0); /* Вернуть контейнер на место */
+        }
+
+        /* Стиль для відгуків */
+        .reviews {
+            margin-top: 30px;
+            width: 100%;
+        }
+
+        .review {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: transform 0.2s;
+        }
+
+        .review:hover {
+            transform: translateY(-3px); /* Легке підняття відгуку при наведенні */
+        }
+
+        .review h4 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        .review p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        /* Стиль для зірок */
+        .stars {
+            color: gold;
+            margin-top: 5px;
+        }
+
+        .stars i {
+            font-size: 1.2em; /* Розмір зірок */
+        }
+
+        .star.animate {
+            animation: bounce 0.5s; /* Додаємо анімацію при виборі */
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        /* Стиль для форми додавання відгуку */
+        .review-form {
+            margin-top: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .review-form textarea {
+            width: 100%;
+            height: 100px;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none; /* Заборонити змінювати розмір текстового поля */
+        }
+
+        .review-form button {
+            margin-top: 10px;
+            background-color: #28a745; /* Цвет кнопки */
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .review-form button:hover {
+            background-color: #218838; /* Темний колір кнопки при наведенні */
+        }
+    </style>
+</head>
+<body>
+<div class="stars">
+    <i class="fa fa-star star"></i>
+    <i class="fa fa-star star"></i>
+    <i class="fa fa-star star"></i>
+    <i class="fa fa-star"></i>
+    <i class="fa fa-star"></i>
+</div>
+    <div class="container">
+        <div class="photo-selection">
+            <img src="photo1.png" alt="Кросівок 1" onclick="selectSlide(0)" class="thumbnail selected" id="thumb1">
+            <img src="photo2.png" alt="Кросівок 2" onclick="selectSlide(1)" class="thumbnail" id="thumb2">
+            <img src="photo3.png" alt="Кросівок 3" onclick="selectSlide(2)" class="thumbnail" id="thumb3">
+        </div>
+
+        <div class="slider">
+            <div class="slide active" id="slide1">
+                <img src="photo1.png" alt="Кросівок 1" class="slide-image">
+                <div class="info">
+                    <h3>Кросівок 1</h3>
+                    <div class="price">1000 грн</div>
+                    <a href="#" class="purchase-btn">Купити</a>
+                </div>
+            </div>
+            <div class="slide" id="slide2">
+                <img src="photo2.png" alt="Кросівок 2" class="slide-image">
+                <div class="info">
+                    <h3>Кросівок 2</h3>
+                    <div class="price">1200 грн</div>
+                    <a href="#" class="purchase-btn">Купити</a>
+                </div>
+            </div>
+            <div class="slide" id="slide3">
+                <img src="photo3.png" alt="Кросівок 3" class="slide-image">
+                <div class="info">
+                    <h3>Кросівок 3</h3>
+                    <div class="price">1500 грн</div>
+                    <a href="#" class="purchase-btn">Купити</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="reviews">
+            <h2>Відгуки</h2>
+            <div class="review" id="review1">
+                <h4>Петро. Н</h4>
+                <p>Чудові кросівки!</p>
+                <div class="stars">
+                    <i class="fa fa-star star animate"></i>
+                    <i class="fa fa-star star animate"></i>
+                    <i class="fa fa-star star animate"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                </div>
+            </div>
+            <div class="review" id="review2">
+                <h4>Людмила. Р</h4>
+                <p>Дуже комфортні та стильні!</p>
+                <div class="stars">
+                    <i class="fa fa-star star animate"></i>
+                    <i class="fa fa-star star animate"></i>
+                    <i class="fa fa-star star animate"></i>
+                    <i class="fa fa-star star animate"></i>
+                    <i class="fa fa-star"></i>
+                </div>
+            </div>
+            <div class="review" id="review3">
+                <h4>Володимир. У</h4>
+                <p>Рекомендую всім!</p>
+                <div class="stars">
+                    <i class="fa fa-star star animate"></i>
+                    <i class="fa fa-star star animate"></i>
+                    <i class="fa fa-star star animate"></i>
+                    <i class="fa fa-star star animate"></i>
+                    <i class="fa fa-star star animate"></i>
+                </div>
+            </div>
+        </div>
+
+<div class="feedback-container">
+    <h2 style="text-align: center;">Залиште свій відгук</h2>
+    <form>
+        <div class="star-rating">
+            <input type="radio" id="star1" name="rating" value="1" />
+            <label for="star1" class="star"><i class="fa fa-star star animate"></i></label>
+            <input type="radio" id="star2" name="rating" value="2" />
+            <label for="star2" class="star"><i class="fa fa-star star animate"></i></label>
+			<label for="star2" class="star"><i class="fa fa-star star animate"></i></label>
+            <input type="radio" id="star3" name="rating" value="3" />
+            <label for="star3" class="star"><i class="fa fa-star star animate"></i></label>
+			<label for="star2" class="star"><i class="fa fa-star star animate"></i></label>
+			<label for="star2" class="star"><i class="fa fa-star star animate"></i></label>
+            <input type="radio" id="star4" name="rating" value="4" />
+            <label for="star4" class="star"><i class="fa fa-star star animate"></i></label>
+			<label for="star2" class="star"><i class="fa fa-star star animate"></i></label>
+			<label for="star2" class="star"><i class="fa fa-star star animate"></i></label>
+			<label for="star2" class="star"><i class="fa fa-star star animate"></i></label>
+            <input type="radio" id="star5" name="rating" value="5" />
+            <label for="star5" class="star"><i class="fa fa-star star animate"></i></label>
+			<label for="star2" class="star"><i class="fa fa-star star animate"></i></label>
+			<label for="star2" class="star"><i class="fa fa-star star animate"></i></label>
+			<label for="star2" class="star"><i class="fa fa-star star animate"></i></label>
+			<label for="star2" class="star"><i class="fa fa-star star animate"></i></label>
+        </div>
+    </form>
+</div>
+        <br>
+        <textarea placeholder="Ваш відгук" rows="4" style="width: 100%;"></textarea>
+        <br>
+        <button type="submit" class="submit-btn">Відправити відгук</button>
+		<p id="thankYouMessage" style="display: none; color: green;">Дякуємо! Ваш відгук відправлено.</p>
+    </form>
+</div>
+
+    <footer>
+        <p>&copy; 2024 NikeBuySumy. Всі права захищені.</p>
+    </footer>
+
+    <script>
+        let currentSlide = 0;
+
+        // Функція для вибору слайду
+        function selectSlide(index) {
+            const slides = document.querySelectorAll('.slide');
+            const thumbnails = document.querySelectorAll('.thumbnail');
+
+            slides[currentSlide].classList.remove('active');
+            thumbnails[currentSlide].classList.remove('selected');
+
+            currentSlide = index;
+
+            slides[currentSlide].classList.add('active');
+            thumbnails[currentSlide].classList.add('selected');
+        }
+
+        // Функція для додавання нового відгуку
+        function addReview() {
+            const reviewText = document.getElementById('reviewText').value;
+            if (reviewText.trim() === '') {
+                alert('Будь ласка, введіть ваш відгук.');
+                return;
+            }
+
+            const reviewsContainer = document.querySelector('.reviews');
+
+            // Створити новий відгук
+            const newReview = document.createElement('div');
+            newReview.classList.add('review');
+
+            newReview.innerHTML = `
+                <h4>Новий автор</h4>
+                <p>${reviewText}</p>
+                <div class="stars">
+                    <i class="fa fa-star star animate"></i>
+                    <i class="fa fa-star star animate"></i>
+                    <i class="fa fa-star star animate"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                </div>
+            `;
+			
+
+            reviewsContainer.appendChild(newReview);
+            document.getElementById('reviewText').value = ''; // Очистити текстове поле
+        }
+
+        // Показати контейнер з відгуками та футер з анімацією
+        document.addEventListener("DOMContentLoaded", function() {
+            const container = document.querySelector('.container');
+            const footer = document.querySelector('footer');
+
+            // Затримка перед показом
+            setTimeout(() => {
+                container.classList.add('show');
+                footer.classList.add('show');
+                const photoSelection = document.querySelector('.photo-selection');
+                photoSelection.style.opacity = 1; // Показати меню вибору фотографій
+                photoSelection.style.transform = 'translateY(0)'; // Вернути меню на місце
+            }, 1000); // Затримка 1 секунда
+        });
+    </script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>
